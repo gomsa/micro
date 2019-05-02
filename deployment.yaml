@@ -11,7 +11,7 @@ spec:
       paths:
         - backend:
             serviceName: micro-service
-            servicePort: 8080
+            servicePort: http
 ---
 apiVersion: v1
 kind: Service
@@ -23,8 +23,9 @@ spec:
     app: micro
   type: NodePort
   ports:
-    - protocol: TCP
+    - name: http
       port: 8080
+      protocol: TCP
       targetPort: 8080
 ---
 apiVersion: apps/v1
@@ -59,3 +60,5 @@ spec:
             value: "kubernetes"
           ports:
           - containerPort: 8080
+            name: http
+            protocol: TCP
