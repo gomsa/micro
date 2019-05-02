@@ -21,7 +21,7 @@ metadata:
 spec:
   selector:
     app: micro
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: http
       port: 8080
