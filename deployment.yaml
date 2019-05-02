@@ -1,3 +1,32 @@
+# 负载均衡
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: micro-ingress
+  namespace: gomsa
+spec:
+  rules:
+  - host: xip.io
+    http:
+      paths:
+        - backend:
+            serviceName: micro-service
+            servicePort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-service
+  namespace: gomsa
+spec:
+  selector:
+    app: micro
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,7 +46,7 @@ spec:
     spec:
       containers:
         - name: micro
-          image: microhq/micro
+          image: microhq/micro:kubernetes
           args:
             - "api"
             - "--handler=rpc"
