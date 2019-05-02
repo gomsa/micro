@@ -16,7 +16,7 @@ spec:
         app: micro
     spec:
       containers:
-        - name: api
+        - name: micro
           image: microhq/micro
           args:
             - "api"
