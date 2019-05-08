@@ -3,7 +3,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: micro-ingress
-  namespace: gomsa
+  namespace: api
 spec:
   rules:
   - host: xip.io
@@ -17,7 +17,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: micro-service
-  namespace: gomsa
+  namespace: api
 spec:
   selector:
     app: micro
@@ -32,7 +32,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: micro
-  namespace: gomsa
+  namespace: api
   labels:
     app: micro
 spec:
