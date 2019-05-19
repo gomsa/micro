@@ -37,9 +37,6 @@ metadata:
   namespace: api
 spec:
   replicas: 3
-  selector:
-    matchLabels:
-      app: greeter
   template:
     metadata:
       labels:
