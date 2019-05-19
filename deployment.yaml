@@ -52,8 +52,8 @@ spec:
             - "srv"
             - "--handler=rpc"
           env:
-          - name: PORT
-            value: "8080"
+          - name: MICRO_SERVER_ADDRESS
+            value: "0.0.0.0:8080"
           - name: ENV
             value: staging
           - name: MICRO_REGISTRY
