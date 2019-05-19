@@ -49,11 +49,11 @@ spec:
         - name: micro
           image: microhq/micro:kubernetes
           args:
-            - "srv"
+            - "api"
             - "--handler=rpc"
           env:
-          - name: MICRO_SERVER_ADDRESS
-            value: "0.0.0.0:8080"
+          - name: PORT
+            value: "8080"
           - name: ENV
             value: staging
           - name: MICRO_REGISTRY
