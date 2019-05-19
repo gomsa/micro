@@ -62,3 +62,11 @@ spec:
           - containerPort: 8080
             name: http
             protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 2
