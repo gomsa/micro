@@ -10,13 +10,13 @@ spec:
     http:
       paths:
         - backend:
-            serviceName: greeter-service
+            serviceName: greeter
             servicePort: greeter-port
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: greeter-service
+  name: greeter
   labels:
     app: greeter
   namespace: api
