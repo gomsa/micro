@@ -1,0 +1,64 @@
+# 负载均衡
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: micro-ingress
+  namespace: srv
+spec:
+  rules:
+  - host: xip.io
+    http:
+      paths:
+        - backend:
+            serviceName: micro-service
+            servicePort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-service
+  namespace: srv
+spec:
+  selector:
+    app: micro
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro
+  namespace: srv
+  labels:
+    app: micro
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: micro
+  template:
+    metadata:
+      labels:
+        app: micro
+    spec:
+      containers:
+        - name: micro
+          image: microhq/micro:kubernetes
+          args:
+            - "srv"
+            - "--handler=rpc"
+          env:
+          - name: PORT
+            value: "8080"
+          - name: ENV
+            value: staging
+          - name: MICRO_REGISTRY
+            value: "kubernetes"
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP

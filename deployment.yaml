@@ -2,28 +2,30 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: micro-ingress
-  namespace: srv
+  name: greeter-ingress
+  namespace: api
 spec:
   rules:
   - host: xip.io
     http:
       paths:
         - backend:
-            serviceName: micro-service
-            servicePort: http
+            serviceName: greeter-service
+            servicePort: greeter-port
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: micro-service
-  namespace: srv
+  name: greeter-service
+  labels:
+    app: greeter
+  namespace: api
 spec:
   selector:
-    app: micro
+    app: greeter
   type: ClusterIP
   ports:
-    - name: http
+    - name: greeter-port
       port: 8080
       protocol: TCP
       targetPort: 8080
@@ -31,34 +33,43 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: micro
-  namespace: srv
-  labels:
-    app: micro
+  name: greeter
+  namespace: api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: micro
+      app: greeter
   template:
     metadata:
       labels:
-        app: micro
+        app: greeter-srv
     spec:
       containers:
-        - name: micro
-          image: microhq/micro:kubernetes
-          args:
-            - "srv"
-            - "--handler=rpc"
-          env:
-          - name: PORT
-            value: "8080"
-          - name: ENV
-            value: staging
-          - name: MICRO_REGISTRY
-            value: "kubernetes"
+        - name: greeter
+          command: [
+            "/greeter-srv",
+            "--selector=static",
+            "--server_address=0.0.0.0:8080",
+            "--broker_address=0.0.0.0:10001"
+          ]
+          image: microhq/greeter-srv:kubernetes
+          imagePullPolicy: Always
           ports:
           - containerPort: 8080
-            name: http
+            name: greeter-port
             protocol: TCP
+        - name: health
+          command: [
+            "/health",
+            "--health_address=0.0.0.0:8081",
+            "--server_name=greeter",
+            "--server_address=0.0.0.0:8080"
+          ]
+          image: microhq/health:kubernetes
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
