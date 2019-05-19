@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: greeter-ingress
+  name: micro-ingress
   namespace: api
 spec:
   rules:
@@ -10,22 +10,20 @@ spec:
     http:
       paths:
         - backend:
-            serviceName: greeter
-            servicePort: greeter-port
+            serviceName: micro-service
+            servicePort: http
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: greeter
-  labels:
-    app: greeter
+  name: micro-service
   namespace: api
 spec:
   selector:
-    app: greeter
+    app: micro
   type: ClusterIP
   ports:
-    - name: greeter-port
+    - name: http
       port: 8080
       protocol: TCP
       targetPort: 8080
@@ -33,43 +31,34 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: greeter
+  name: micro
   namespace: api
+  labels:
+    app: micro
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: greeter
+      app: micro
   template:
     metadata:
       labels:
-        app: greeter
+        app: micro
     spec:
       containers:
-        - name: greeter
-          command: [
-            "/greeter-srv",
-            "--selector=static",
-            "--server_address=0.0.0.0:8080",
-            "--broker_address=0.0.0.0:10001"
-          ]
-          image: microhq/greeter-srv:kubernetes
-          imagePullPolicy: Always
+        - name: micro
+          image: microhq/micro:kubernetes
+          args:
+            - "srv"
+            - "--handler=rpc"
+          env:
+          - name: PORT
+            value: "8080"
+          - name: ENV
+            value: staging
+          - name: MICRO_REGISTRY
+            value: "kubernetes"
           ports:
           - containerPort: 8080
-            name: greeter-port
+            name: http
             protocol: TCP
-        - name: health
-          command: [
-            "/health",
-            "--health_address=0.0.0.0:8081",
-            "--server_name=greeter",
-            "--server_address=0.0.0.0:8080"
-          ]
-          image: microhq/health:kubernetes
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8081
-            initialDelaySeconds: 3
-            periodSeconds: 3
