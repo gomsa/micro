@@ -10,13 +10,13 @@ spec:
     http:
       paths:
         - backend:
-            serviceName: micro-service
+            serviceName: micro
             servicePort: http
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: micro-service
+  name: micro
   namespace: api
 spec:
   selector:
@@ -62,4 +62,19 @@ spec:
           - containerPort: 8080
             name: http
             protocol: TCP
+        - name: health
+          command: [
+            "/health",
+            "--health_address=0.0.0.0:8081",
+            "--server_name=micro",
+            "--server_address=0.0.0.0:8080"
+	        ]
+          image: microhq/health:kubernetes
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 3
+            periodSeconds: 3
+
 
