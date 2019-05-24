@@ -69,10 +69,6 @@ spec:
             "--server_name=go.micro.api",
             "--server_address=0.0.0.0:8080"
 	        ]
-          ports:
-          - containerPort: 8081
-            name: health
-            protocol: TCP
           image: microhq/health:kubernetes
           livenessProbe:
             httpGet:
