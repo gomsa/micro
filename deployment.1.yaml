@@ -10,17 +10,17 @@ spec:
     http:
       paths:
         - backend:
-            serviceName: go.micro.api
+            serviceName: micro
             servicePort: http
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: go.micro.api
+  name: micro
   namespace: api
 spec:
   selector:
-    app: go.micro.api
+    app: micro
   type: ClusterIP
   ports:
     - name: http
@@ -31,22 +31,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go.micro.api
+  name: micro
   namespace: api
   labels:
-    app: go.micro.api
+    app: micro
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: go.micro.api
+      app: micro
   template:
     metadata:
       labels:
-        app: go.micro.api
+        app: micro
     spec:
       containers:
-        - name: go.micro.api
+        - name: micro
           image: microhq/micro:kubernetes
           args:
             - "api"
