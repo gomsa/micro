@@ -10,17 +10,17 @@ spec:
     http:
       paths:
         - backend:
-            serviceName: go.micro.api
+            serviceName: micro
             servicePort: http
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: go.micro.api
+  name: micro
   namespace: api
 spec:
   selector:
-    app: go.micro.api
+    app: micro
   type: ClusterIP
   ports:
     - name: http
@@ -31,33 +31,31 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go.micro.api
+  name: micro
   namespace: api
   labels:
-    app: go.micro.api
+    app: micro
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: go.micro.api
+      app: micro
   template:
     metadata:
       labels:
-        app: go.micro.api
+        app: micro
     spec:
       containers:
-        - name: go.micro.api
+        - name: micro
           image: microhq/micro:kubernetes
           args:
             - "api"
             - "--handler=rpc"
           env:
-          - name: PORT
-            value: "8080"
-          - name: ENV
-            value: staging
-          - name: MICRO_REGISTRY
-            value: "kubernetes"
+          - name: MICRO_SERVER_NAME
+            value: micro
+          - name: MICRO_SERVER_ADDRESS
+            value: 0.0.0.0:8080
           ports:
           - containerPort: 8080
             name: http
@@ -66,7 +64,7 @@ spec:
           command: [
             "/health",
             "--health_address=0.0.0.0:8081",
-            "--server_name=go.micro.api",
+            "--server_name=micro",
             "--server_address=0.0.0.0:8080"
 	        ]
           image: microhq/health:kubernetes
