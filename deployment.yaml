@@ -50,6 +50,7 @@ spec:
           image: microhq/micro:kubernetes
           args:
             - "api"
+            - "--server_name=micro"
             - "--handler=rpc"
           env:
           - name: PORT
@@ -66,7 +67,7 @@ spec:
           command: [
             "/health",
             "--health_address=0.0.0.0:8081",
-            "--server_name=go.micro.api",
+            "--server_name=micro",
             "--server_address=0.0.0.0:8080"
 	        ]
           image: microhq/health:kubernetes
