@@ -1,6 +1,15 @@
 apiVersion: v1
 kind: Secret
 metadata:
+  name: user
+  namespace: srv
+data:
+  admin-password: "123456"
+  app-key: TFRBSWRzS1RrbXpySVY1Uw==
+---
+apiVersion: v1
+kind: Secret
+metadata:
   name: wechat
   namespace: srv
 data:
@@ -16,3 +25,5 @@ data:
   access-key-id: TFRBSWRzS1RrbXpySVY1Uw==
   access-key-secret: aHNXRlhYTzdpWnlzcktWSnRvTXp5UmFhRU5RYzJ3
 ---
+
+
