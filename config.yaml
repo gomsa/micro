@@ -4,7 +4,7 @@ metadata:
   name: user
   namespace: srv
 data:
-  admin-password: "123456"
+  admin-password: 123456
   app-key: TFRBSWRzS1RrbXpySVY1Uw==
 ---
 apiVersion: v1
