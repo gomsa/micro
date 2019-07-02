@@ -25,5 +25,13 @@ data:
   access-key-id: TFRBSWRzS1RrbXpySVY1Uw==
   access-key-secret: aHNXRlhYTzdpWnlzcktWSnRvTXp5UmFhRU5RYzJ3
 ---
-
-
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloopen
+  namespace: srv
+data:
+  account-sid: TFRBSWRzS1RrbXpySVY1Uw==
+  app-id: aHNXRlhYTzdpWnlzcktWSnRvTXp5UmFhRU5RYzJ3
+  author-token: aHNXRlhYTzdpWnlzcktWSnRvTXp5UmFhRU5RYzJ3
+---
